@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "id": "denseoremod",
   "version": "${version}",
-  "name": "Dense Ore Mod",
+  "name": "BiomOre Mod",
   "license": "CC0-1.0",
-  "icon": "assets/teleportermod/icon.png",
+  "icon": "assets/biomore/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
-      "fp.yeyu.denseoremod.DenseOreMod"
+      "fp.yeyu.denseoremod.BiomOreMod"
     ]
   },
   "mixins": [

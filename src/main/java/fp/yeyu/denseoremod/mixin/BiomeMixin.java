@@ -1,6 +1,6 @@
 package fp.yeyu.denseoremod.mixin;
 
-import fp.yeyu.denseoremod.DenseOreMod;
+import fp.yeyu.denseoremod.BiomOreMod;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
@@ -37,11 +37,11 @@ public abstract class BiomeMixin {
 
     @Inject(method="generateFeatureStep", at=@At("HEAD"), cancellable = true)
     public void generateFeatureStepMixin(GenerationStep.Feature step, ChunkGenerator<? extends ChunkGeneratorConfig> chunkGenerator, IWorld world, long seed, ChunkRandom random, BlockPos pos, CallbackInfo ci) {
-        if (this.category != Biome.Category.PLAINS || world.getLevelProperties().getGeneratorType() != DenseOreMod.DENSE_ORE)
+        if (this.category != Biome.Category.PLAINS || world.getLevelProperties().getGeneratorType() != BiomOreMod.DENSE_ORE)
             ci.cancel();
 
         final Logger LOGGER = LogManager.getLogger(BiomeMixin.class);
-        LOGGER.info("Biome is plain. Generator type is Dense Ore. Restructuring ores.");
+        LOGGER.info("Biome is plain. Generator type is BiomOre. Restructuring ores.");
 
         this.features.get(GenerationStep.Feature.UNDERGROUND_ORES).clear();
 
