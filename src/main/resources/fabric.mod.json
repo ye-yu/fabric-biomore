@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "denseoremod",
+  "version": "${version}",
+  "name": "Dense Ore Mod",
+  "license": "CC0-1.0",
+  "icon": "assets/teleportermod/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "fp.yeyu.denseoremod.DenseOreMod"
+    ]
+  },
+  "mixins": [
+    "denseoremod.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.8.2+build.194",
+    "fabric": "*",
+    "minecraft": "1.15.2"
+  }
+}
