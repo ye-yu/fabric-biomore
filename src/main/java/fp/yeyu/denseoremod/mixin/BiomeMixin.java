@@ -1,7 +1,9 @@
 package fp.yeyu.denseoremod.mixin;
 
+import fp.yeyu.denseoremod.BiomOreFeatures;
 import fp.yeyu.denseoremod.BiomOreMod;
 import net.minecraft.block.Blocks;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.biome.Biome;
@@ -14,7 +16,6 @@ import net.minecraft.world.gen.decorator.Decorator;
 import net.minecraft.world.gen.decorator.RangeDecoratorConfig;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,22 +29,22 @@ import java.util.Map;
 
 @Mixin(Biome.class)
 public abstract class BiomeMixin {
+    @Shadow @Final protected Biome.Category category;
     @Shadow @Final protected Map<GenerationStep.Feature, List<ConfiguredFeature<?, ?>>> features;
 
     @Shadow public abstract void addFeature(GenerationStep.Feature step, ConfiguredFeature<?, ?> configuredFeature);
+    @Shadow public abstract Biome.Category getCategory();
 
-    @Shadow @Final protected Biome.Category category;
+    @Shadow public abstract Text getName();
 
+    @Shadow @Final public static Logger LOGGER;
 
     @Inject(method="generateFeatureStep", at=@At("HEAD"), cancellable = true)
     public void generateFeatureStepMixin(GenerationStep.Feature step, ChunkGenerator<? extends ChunkGeneratorConfig> chunkGenerator, IWorld world, long seed, ChunkRandom random, BlockPos pos, CallbackInfo ci) {
-        if (this.category != Biome.Category.PLAINS || world.getLevelProperties().getGeneratorType() != BiomOreMod.DENSE_ORE)
-            ci.cancel();
-
-        final Logger LOGGER = LogManager.getLogger(BiomeMixin.class);
-        LOGGER.info("Biome is plain. Generator type is BiomOre. Restructuring ores.");
-
+        if (world.getLevelProperties().getGeneratorType() != BiomOreMod.DENSE_ORE) return;
         this.features.get(GenerationStep.Feature.UNDERGROUND_ORES).clear();
+        BiomOreFeatures.methods.getOrDefault(this.getCategory().getName(), BiomOreFeatures::none).accept(this);
+        LOGGER.info("BiomOre generator for biome: " + this.getName().asString() + " category: " + this.getCategory().getName());
 
         // from DefaultBiomeFeatures.addMineables
         this.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, net.minecraft.world.gen.feature.Feature.ORE.configure(new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, Blocks.DIRT.getDefaultState(), 33)).createDecoratedFeature(Decorator.COUNT_RANGE.configure(new RangeDecoratorConfig(10, 0, 0, 256))));
