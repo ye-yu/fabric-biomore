@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import fp.yeyu.denseoremod.BiomOreMod;
 import fp.yeyu.denseoremod.feature.builder.BiomOreSingleFeatureConfig;
 import fp.yeyu.denseoremod.feature.builder.BiomOreVeinFeatureConfig;
-import fp.yeyu.denseoremod.feature.builder.BlockUtils;
+import fp.yeyu.denseoremod.feature.builder.targetfinder.Target;
 import fp.yeyu.denseoremod.feature.decorator.CountChanceHeightConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -57,7 +57,7 @@ public class BiomOreFeatures {
 
         // custom ores generation
         addVeinOre(biome, Blocks.DIAMOND_ORE, 0.25f, 5, 0, 64);
-        addVeinOre(biome, Blocks.EMERALD_ORE, 8, BlockUtils.Target.OVERWORLD_SURFACE_BLOCK, 0.33f, 1, 20, 0, 64);
+        addVeinOre(biome, Blocks.EMERALD_ORE, 8, Target.OVERWORLD_SURFACE_BLOCK, 0.33f, 1, 20, 0, 64);
         addSingleOre(biome, Blocks.GOLD_BLOCK, 0.5f, 5, 5, 0, 64);
         LOGGER.info("Redefined features for ocean type biome.");
     }
@@ -129,7 +129,7 @@ public class BiomOreFeatures {
     public static void addVeinOre(Biome biome,
                                   Block block,
                                   int veinSize,
-                                  BlockUtils.Target target,
+                                  Target target,
                                   float chance,
                                   int count,
                                   int bottomOffset,
@@ -159,7 +159,7 @@ public class BiomOreFeatures {
                 biome,
                 block,
                 (int) Math.round(commonVeinSize.get(block) * AMP),
-                BlockUtils.Target.NATURAL_STONE,
+                Target.NATURAL_STONE,
                 chance,
                 1,
                 bottomOffset,
@@ -179,12 +179,12 @@ public class BiomOreFeatures {
                 BiomOreMod.BIOM_SINGLE_ORE_FEATURE
                         .configure(
                                 new BiomOreSingleFeatureConfig(
-                                        BlockUtils.Target.NATURAL_STONE,
+                                        Target.NATURAL_STONE,
                                         block.getDefaultState()
                                 )
-                ).createDecoratedFeature(
+                        ).createDecoratedFeature(
                         BiomOreMod.CHANCE_HEIGHT_CONFIG_DECORATOR.configure(
-                                new CountChanceHeightConfig(chance, 2, count, top - topOffset, BlockUtils.Target.NATURAL_STONE)
+                                new CountChanceHeightConfig(chance, 2, count, top - topOffset, Target.NATURAL_STONE)
                         )
                 )
         );

@@ -1,7 +1,6 @@
 package fp.yeyu.denseoremod.feature.builder;
 
 import com.mojang.datafixers.Dynamic;
-import fp.yeyu.denseoremod.BiomOreMod;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.chunk.ChunkGenerator;

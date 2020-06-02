@@ -1,7 +1,7 @@
 package fp.yeyu.denseoremod.mixin;
 
-import fp.yeyu.denseoremod.feature.BiomOreFeatures;
 import fp.yeyu.denseoremod.BiomOreMod;
+import fp.yeyu.denseoremod.feature.BiomOreFeatures;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;

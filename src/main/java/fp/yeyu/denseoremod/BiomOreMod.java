@@ -27,7 +27,7 @@ public class BiomOreMod implements ClientModInitializer {
     static {
         int i = 0;
         //noinspection StatementWithEmptyBody
-        while(Objects.nonNull(LevelGeneratorType.TYPES[i++]));
+        while (Objects.nonNull(LevelGeneratorType.TYPES[i++])) ;
         i--; //reduce after increase when detecting null
         TYPE_EMPTY_AT = i;
         DENSE_ORE = (new LevelGeneratorType(TYPE_EMPTY_AT, "biomore", 2)).setVersioned();
