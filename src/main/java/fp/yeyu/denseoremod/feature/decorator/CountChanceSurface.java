@@ -6,8 +6,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Random;
 import java.util.function.Function;
@@ -16,15 +14,8 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class CountChanceSurface extends CountChanceHeight {
-    private static final Logger LOGGER = LogManager.getLogger(CountChanceSurface.class);
     public CountChanceSurface(Function<Dynamic<?>, ? extends CountChanceConfig> configDeserializer) {
         super(configDeserializer);
-    }
-
-    @Override
-    public Stream<BlockPos> getPositions(IWorld world, ChunkGenerator<? extends ChunkGeneratorConfig> generator, Random random, CountChanceConfig config, BlockPos pos) {
-        DoubleStream ds = IntStream.range(0, config.count).mapToDouble(i -> random.nextDouble()).filter(i -> i < config.chance);
-        return ds.mapToObj(i -> randomBlockPos(world, config, pos, random));
     }
 
     public static BlockPos randomBlockPos(IWorld world, CountChanceConfig config, BlockPos blockPos, Random random) {
@@ -41,5 +32,11 @@ public class CountChanceSurface extends CountChanceHeight {
             }
         }
         return testBp;
+    }
+
+    @Override
+    public Stream<BlockPos> getPositions(IWorld world, ChunkGenerator<? extends ChunkGeneratorConfig> generator, Random random, CountChanceConfig config, BlockPos pos) {
+        DoubleStream ds = IntStream.range(0, config.count).mapToDouble(i -> random.nextDouble()).filter(i -> i < config.chance);
+        return ds.mapToObj(i -> randomBlockPos(world, config, pos, random));
     }
 }

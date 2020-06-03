@@ -20,12 +20,6 @@ public class CountChanceHeight extends Decorator<CountChanceConfig> {
         super(configDeserializer);
     }
 
-    @Override
-    public Stream<BlockPos> getPositions(IWorld world, ChunkGenerator<? extends ChunkGeneratorConfig> generator, Random random, CountChanceConfig config, BlockPos pos) {
-        DoubleStream ds = IntStream.range(0, config.count).mapToDouble(i -> random.nextDouble()).filter(i -> i < config.chance);
-        return ds.mapToObj(i -> randomBlockPos(world, config, pos, random));
-    }
-
     public static BlockPos randomBlockPos(IWorld world, CountChanceConfig config, BlockPos blockPos, Random random) {
         Target target = config.target;
         int x = random.nextInt(16) + blockPos.getX();
@@ -40,5 +34,11 @@ public class CountChanceHeight extends Decorator<CountChanceConfig> {
         }
         y = random.nextInt(testBp.getY() - config.bottomOffset) + config.bottomOffset;
         return new BlockPos(x, y, z);
+    }
+
+    @Override
+    public Stream<BlockPos> getPositions(IWorld world, ChunkGenerator<? extends ChunkGeneratorConfig> generator, Random random, CountChanceConfig config, BlockPos pos) {
+        DoubleStream ds = IntStream.range(0, config.count).mapToDouble(i -> random.nextDouble()).filter(i -> i < config.chance);
+        return ds.mapToObj(i -> randomBlockPos(world, config, pos, random));
     }
 }

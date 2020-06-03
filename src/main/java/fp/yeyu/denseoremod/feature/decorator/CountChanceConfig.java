@@ -22,6 +22,15 @@ public class CountChanceConfig implements DecoratorConfig {
         this.target = target;
     }
 
+    public static CountChanceConfig deserialize(Dynamic<?> dynamic) {
+        final float chance = dynamic.get("chance").asFloat(0f);
+        final int count = dynamic.get("count").asInt(0);
+        final int bottom_offset = dynamic.get("bottom_offset").asInt(0);
+        final int range = dynamic.get("range").asInt(0);
+        final Target target = Target.byName(dynamic.get("target").asString(""));
+        return new CountChanceConfig(chance, count, bottom_offset, range, target);
+    }
+
     @Override
     public <T> Dynamic<T> serialize(DynamicOps<T> ops) {
         return new Dynamic<>(
@@ -33,14 +42,5 @@ public class CountChanceConfig implements DecoratorConfig {
                         ops.createString("range"), ops.createInt(this.range),
                         ops.createString("target"), ops.createString(this.target.getName())
                 )));
-    }
-
-    public static CountChanceConfig deserialize(Dynamic<?> dynamic) {
-        final float chance = dynamic.get("chance").asFloat(0f);
-        final int count = dynamic.get("count").asInt(0);
-        final int bottom_offset = dynamic.get("bottom_offset").asInt(0);
-        final int range = dynamic.get("range").asInt(0);
-        final Target target = Target.byName(dynamic.get("target").asString(""));
-        return new CountChanceConfig(chance, count, bottom_offset, range, target);
     }
 }

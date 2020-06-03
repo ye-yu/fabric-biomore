@@ -26,6 +26,9 @@ import java.util.Map;
 public abstract class BiomeMixin {
     @Shadow
     @Final
+    public static Logger LOGGER;
+    @Shadow
+    @Final
     protected Map<GenerationStep.Feature, List<ConfiguredFeature<?, ?>>> features;
 
     @Shadow
@@ -36,10 +39,6 @@ public abstract class BiomeMixin {
 
     @Shadow
     public abstract Text getName();
-
-    @Shadow
-    @Final
-    public static Logger LOGGER;
 
     @Inject(method = "generateFeatureStep", at = @At("HEAD"), cancellable = true)
     public void generateFeatureStepMixin(GenerationStep.Feature step, ChunkGenerator<? extends ChunkGeneratorConfig> chunkGenerator, IWorld world, long seed, ChunkRandom random, BlockPos pos, CallbackInfo ci) {

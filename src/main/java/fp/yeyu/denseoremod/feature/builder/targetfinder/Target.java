@@ -1,6 +1,5 @@
 package fp.yeyu.denseoremod.feature.builder.targetfinder;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.predicate.block.BlockPredicate;

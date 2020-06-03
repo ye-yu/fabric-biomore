@@ -11,8 +11,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.DefaultBiomeFeatures;
 import net.minecraft.world.gen.GenerationStep;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.function.Consumer;
@@ -20,7 +18,6 @@ import java.util.function.Consumer;
 public class BiomOreFeatures {
     public static final HashMap<String, Consumer<Object>> methods = Maps.newHashMap();
     public static final HashMap<Block, Integer> commonVeinSize = Maps.newHashMap();
-    public static final Logger LOGGER = LogManager.getLogger(BiomOreFeatures.class);
     public static final double AMP = 3;
 
     static {
@@ -59,7 +56,6 @@ public class BiomOreFeatures {
         addThickVeinOre(biome, Blocks.DIAMOND_ORE, 0.25f, 5, 0, 64);
         addSurfaceVeinOre(biome, Blocks.EMERALD_ORE, 10, Target.OVERWORLD_SURFACE_BLOCK, 0.2f, 1, 20, 0, 64);
         addSingleOre(biome, Blocks.GOLD_BLOCK, 0.35f, 5, 5, 0, 64);
-        LOGGER.info("Redefined features for ocean type biome.");
     }
 
     public static void plains(Object biomeObj) {
@@ -150,14 +146,14 @@ public class BiomOreFeatures {
     }
 
     public static void addSurfaceVeinOre(Biome biome,
-                                  Block block,
-                                  int veinSize,
-                                  Target target,
-                                  float chance,
-                                  int count,
-                                  int bottomOffset,
-                                  int topOffSet,
-                                  int top) {
+                                         Block block,
+                                         int veinSize,
+                                         Target target,
+                                         float chance,
+                                         int count,
+                                         int bottomOffset,
+                                         int topOffSet,
+                                         int top) {
         biome.addFeature(
                 GenerationStep.Feature.UNDERGROUND_ORES,
                 BiomOreMod.BIOM_FLAT_VEIN_ORE_FEATURE
@@ -171,6 +167,7 @@ public class BiomOreFeatures {
                                         new CountChanceConfig(chance, count, bottomOffset, top - topOffSet, target)))
         );
     }
+
     public static void addThickVeinOre(Biome biome,
                                        Block block,
                                        float chance,

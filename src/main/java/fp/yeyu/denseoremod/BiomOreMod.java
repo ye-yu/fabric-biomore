@@ -4,8 +4,8 @@ import fp.yeyu.denseoremod.feature.builder.BiomOreSingleFeature;
 import fp.yeyu.denseoremod.feature.builder.BiomOreSingleFeatureConfig;
 import fp.yeyu.denseoremod.feature.builder.BiomOreVeinFeature;
 import fp.yeyu.denseoremod.feature.builder.BiomOreVeinFeatureConfig;
-import fp.yeyu.denseoremod.feature.decorator.CountChanceHeight;
 import fp.yeyu.denseoremod.feature.decorator.CountChanceConfig;
+import fp.yeyu.denseoremod.feature.decorator.CountChanceHeight;
 import fp.yeyu.denseoremod.feature.decorator.CountChanceSurface;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.util.registry.Registry;
@@ -18,7 +18,6 @@ import org.apache.logging.log4j.Logger;
 import java.util.Objects;
 
 public class BiomOreMod implements ClientModInitializer {
-    private static final Logger LOGGER = LogManager.getLogger(BiomOreMod.class);
     public static final int TYPE_EMPTY_AT;
     public static final LevelGeneratorType DENSE_ORE;
     public static final Feature<BiomOreVeinFeatureConfig> BIOM_THICK_VEIN_ORE_FEATURE;
@@ -26,6 +25,7 @@ public class BiomOreMod implements ClientModInitializer {
     public static final Feature<BiomOreSingleFeatureConfig> BIOM_SINGLE_ORE_FEATURE;
     public static final Decorator<CountChanceConfig> COUNT_CHANCE_HEIGHT_CONFIG_DECORATOR;
     public static final Decorator<CountChanceConfig> COUNT_CHANCE_SURFACE_CONFIG_DECORATOR;
+    private static final Logger LOGGER = LogManager.getLogger(BiomOreMod.class);
 
     static {
         int i = 0;

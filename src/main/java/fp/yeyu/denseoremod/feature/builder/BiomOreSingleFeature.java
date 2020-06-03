@@ -6,8 +6,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
 import net.minecraft.world.gen.feature.Feature;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -15,7 +13,6 @@ import java.util.Random;
 import java.util.function.Function;
 
 public class BiomOreSingleFeature extends Feature<BiomOreSingleFeatureConfig> {
-    private static final Logger LOGGER = LogManager.getLogger(BiomOreSingleFeature.class);
 
     public BiomOreSingleFeature(Function<Dynamic<?>, ? extends BiomOreSingleFeatureConfig> configDeserializer) {
         super(configDeserializer);

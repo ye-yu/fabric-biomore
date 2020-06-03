@@ -8,8 +8,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
 import net.minecraft.world.gen.feature.Feature;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.BitSet;
@@ -18,7 +16,6 @@ import java.util.Random;
 import java.util.function.Function;
 
 public class BiomOreVeinFeature extends Feature<BiomOreVeinFeatureConfig> {
-    private static final Logger LOGGER = LogManager.getLogger(BiomOreVeinFeature.class);
     private boolean flatVein = false;
 
     public BiomOreVeinFeature(Function<Dynamic<?>, ? extends BiomOreVeinFeatureConfig> configFactory) {
@@ -32,7 +29,6 @@ public class BiomOreVeinFeature extends Feature<BiomOreVeinFeatureConfig> {
 
     public boolean generate(IWorld iWorld, ChunkGenerator<? extends ChunkGeneratorConfig> chunkGenerator, Random random, @Nullable BlockPos blockPos, BiomOreVeinFeatureConfig oreFeatureConfig) {
         if (Objects.isNull(blockPos)) return false;
-        LOGGER.info(String.format("Generating %s of %d blocks of %s at %d %d %d", flatVein ? "flat vein" : "thick vein", oreFeatureConfig.size, oreFeatureConfig.state.getBlock(), blockPos.getX(), blockPos.getY(), blockPos.getZ()));
         return flatVein ?
                 generateFlatVein(iWorld, random, blockPos, oreFeatureConfig) :
                 generateThickVein(iWorld, random, blockPos, oreFeatureConfig);
@@ -40,17 +36,16 @@ public class BiomOreVeinFeature extends Feature<BiomOreVeinFeatureConfig> {
 
     private boolean generateFlatVein(IWorld iWorld, Random random, BlockPos blockPos, BiomOreVeinFeatureConfig oreFeatureConfig) {
         final int size = oreFeatureConfig.size;
-        final int randomLength = random.nextInt((int)(size * 0.75)) + (int)(size * 0.25);
+        final int randomLength = random.nextInt((int) (size * 0.75)) + (int) (size * 0.25);
         int spawnedBlock = 0;
         final int noiseMax = 2;
         BlockPos placeBlock = new BlockPos(blockPos);
 
         int useNoise = random.nextInt(noiseMax);
-        for(int i = 0; i < size; i++) {
-            if(random.nextBoolean() && oreFeatureConfig.target.getCondition().test(iWorld.getBlockState(placeBlock))) {
+        for (int i = 0; i < size; i++) {
+            if (random.nextBoolean() && oreFeatureConfig.target.getCondition().test(iWorld.getBlockState(placeBlock))) {
                 spawnedBlock++;
                 iWorld.setBlockState(placeBlock, oreFeatureConfig.state, 2);
-                LOGGER.info(String.format("Placing %s at %d %d %d", oreFeatureConfig.state.getBlock(), placeBlock.getX(), placeBlock.getY(), placeBlock.getZ()));
             }
 
             placeBlock = placeBlock.add(1, 0, -useNoise);
@@ -84,8 +79,6 @@ public class BiomOreVeinFeature extends Feature<BiomOreVeinFeatureConfig> {
             for (int t = p; t <= p + q; ++t) {
                 if (o <= iWorld.getTopY(Heightmap.Type.OCEAN_FLOOR_WG, s, t)) {
                     return this.generateVeinPart(iWorld, random, oreFeatureConfig, d, e, h, j, l, m, n, o, p, q, r);
-                } else {
-                    LOGGER.warn(String.format("Cannot place %s at %d %d %d", oreFeatureConfig.state.getBlock(), blockPos.getX(), blockPos.getY(), blockPos.getZ()));
                 }
             }
         }
