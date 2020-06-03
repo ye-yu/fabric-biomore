@@ -138,3 +138,5 @@ gradle-app.setting
 
 run/
 nohup.out
+/src/main/resources/data/dev/*
+
