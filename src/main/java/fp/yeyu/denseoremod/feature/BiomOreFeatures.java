@@ -9,9 +9,11 @@ import fp.yeyu.denseoremod.feature.decorator.CountChanceConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.biome.DefaultBiomeFeatures;
 import net.minecraft.world.gen.GenerationStep;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
@@ -54,8 +56,17 @@ public class BiomOreFeatures {
 
         // custom ores generation
         addThickVeinOre(biome, Blocks.DIAMOND_ORE, 0.25f, 5, 0, 64);
-        addSurfaceVeinOre(biome, Blocks.EMERALD_ORE, 10, Target.OVERWORLD_SURFACE_BLOCK, 0.2f, 1, 20, 0, 64);
-        addSingleOre(biome, Blocks.GOLD_BLOCK, 0.35f, 5, 5, 0, 64);
+        addSurfaceVeinOre(biome, Blocks.EMERALD_ORE, 12, Target.OVERWORLD_SURFACE_BLOCK, 0.08f, 1, 20, 0, 64);
+        if (biome == Biomes.LUKEWARM_OCEAN)
+            addSingleOre(biome, Blocks.GOLD_BLOCK, 0.35f, 5, 5, 0, 64);
+        if (biome == Biomes.DEEP_FROZEN_OCEAN)
+            addSingleOre(biome, Blocks.EMERALD_BLOCK, 0.35f, 5, 5, 0, 64);
+        if (Arrays.asList(new Biome[]{Biomes.DEEP_FROZEN_OCEAN, Biomes.DEEP_COLD_OCEAN, Biomes.DEEP_OCEAN, Biomes.DEEP_LUKEWARM_OCEAN, Biomes.DEEP_WARM_OCEAN}).contains(biome)) {
+            addSurfaceVeinOre(biome, Blocks.PRISMARINE, 5, Target.OVERWORLD_SURFACE_BLOCK, 0.2f, 1, 20, 0, 64);
+            addSurfaceVeinOre(biome, Blocks.SEA_LANTERN, 2, Target.OVERWORLD_SURFACE_BLOCK, 0.2f / 0.5f, 1, 20, 0, 64);
+            addSingleOre(biome, Blocks.SEA_LANTERN, 0.35f, 5, 5, 0, 64);
+        }
+
     }
 
     public static void plains(Object biomeObj) {
