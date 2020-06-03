@@ -6,7 +6,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
-import net.minecraft.world.gen.decorator.Decorator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Random;
 import java.util.function.Function;
@@ -14,9 +15,9 @@ import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class CountChanceHeight extends Decorator<CountChanceConfig> {
-
-    public CountChanceHeight(Function<Dynamic<?>, ? extends CountChanceConfig> configDeserializer) {
+public class CountChanceSurface extends CountChanceHeight {
+    private static final Logger LOGGER = LogManager.getLogger(CountChanceSurface.class);
+    public CountChanceSurface(Function<Dynamic<?>, ? extends CountChanceConfig> configDeserializer) {
         super(configDeserializer);
     }
 
@@ -32,13 +33,13 @@ public class CountChanceHeight extends Decorator<CountChanceConfig> {
         int z = random.nextInt(16) + blockPos.getZ();
         int y = config.range + config.bottomOffset;
         BlockPos testBp = new BlockPos(x, y, z);
+
         while (!target.getCondition().test(world.getBlockState(testBp))) {
             testBp = testBp.down();
             if (testBp.getY() == config.bottomOffset) {
                 return null;
             }
         }
-        y = random.nextInt(testBp.getY() - config.bottomOffset) + config.bottomOffset;
-        return new BlockPos(x, y, z);
+        return testBp;
     }
 }

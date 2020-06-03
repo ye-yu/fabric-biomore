@@ -24,7 +24,6 @@ public class BiomOreSingleFeature extends Feature<BiomOreSingleFeatureConfig> {
     @Override
     public boolean generate(IWorld world, ChunkGenerator<? extends ChunkGeneratorConfig> generator, Random random, @Nullable BlockPos pos, BiomOreSingleFeatureConfig config) {
         if (Objects.isNull(pos) || !config.target.getCondition().test(world.getBlockState(pos))) return false;
-        LOGGER.info(String.format("Generating %s near %d %d %d", config.state.getBlock(), pos.getX(), pos.getY(), pos.getZ()));
         world.setBlockState(pos, config.state, 2);
         return true;
     }

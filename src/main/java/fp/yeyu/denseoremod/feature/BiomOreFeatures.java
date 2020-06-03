@@ -5,7 +5,7 @@ import fp.yeyu.denseoremod.BiomOreMod;
 import fp.yeyu.denseoremod.feature.builder.BiomOreSingleFeatureConfig;
 import fp.yeyu.denseoremod.feature.builder.BiomOreVeinFeatureConfig;
 import fp.yeyu.denseoremod.feature.builder.targetfinder.Target;
-import fp.yeyu.denseoremod.feature.decorator.CountChanceHeightConfig;
+import fp.yeyu.denseoremod.feature.decorator.CountChanceConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.world.biome.Biome;
@@ -56,8 +56,8 @@ public class BiomOreFeatures {
         DefaultBiomeFeatures.addDefaultDisks(biome);
 
         // custom ores generation
-        addVeinOre(biome, Blocks.DIAMOND_ORE, 0.25f, 5, 0, 64);
-        addVeinOre(biome, Blocks.EMERALD_ORE, 8, Target.OVERWORLD_SURFACE_BLOCK, 0.33f, 1, 20, 0, 64);
+        addThickVeinOre(biome, Blocks.DIAMOND_ORE, 0.25f, 5, 0, 64);
+        addSurfaceVeinOre(biome, Blocks.EMERALD_ORE, 12, Target.OVERWORLD_SURFACE_BLOCK, 0.33f, 1, 20, 0, 64);
         addSingleOre(biome, Blocks.GOLD_BLOCK, 0.5f, 5, 5, 0, 64);
         LOGGER.info("Redefined features for ocean type biome.");
     }
@@ -126,7 +126,30 @@ public class BiomOreFeatures {
         Biome biome = (Biome) biomeObj;
     }
 
-    public static void addVeinOre(Biome biome,
+    public static void addThickVeinOre(Biome biome,
+                                       Block block,
+                                       int veinSize,
+                                       Target target,
+                                       float chance,
+                                       int count,
+                                       int bottomOffset,
+                                       int topOffSet,
+                                       int top) {
+        biome.addFeature(
+                GenerationStep.Feature.UNDERGROUND_ORES,
+                BiomOreMod.BIOM_THICK_VEIN_ORE_FEATURE
+                        .configure(
+                                new BiomOreVeinFeatureConfig(
+                                        target,
+                                        block.getDefaultState(),
+                                        veinSize))
+                        .createDecoratedFeature(
+                                BiomOreMod.COUNT_CHANCE_HEIGHT_CONFIG_DECORATOR.configure(
+                                        new CountChanceConfig(chance, count, bottomOffset, top - topOffSet, target)))
+        );
+    }
+
+    public static void addSurfaceVeinOre(Biome biome,
                                   Block block,
                                   int veinSize,
                                   Target target,
@@ -137,25 +160,24 @@ public class BiomOreFeatures {
                                   int top) {
         biome.addFeature(
                 GenerationStep.Feature.UNDERGROUND_ORES,
-                BiomOreMod.BIOM_VEIN_ORE_FEATURE
+                BiomOreMod.BIOM_FLAT_VEIN_ORE_FEATURE
                         .configure(
                                 new BiomOreVeinFeatureConfig(
                                         target,
                                         block.getDefaultState(),
                                         veinSize))
                         .createDecoratedFeature(
-                                BiomOreMod.CHANCE_HEIGHT_CONFIG_DECORATOR.configure(
-                                        new CountChanceHeightConfig(chance, count, bottomOffset, top - topOffSet, target)))
+                                BiomOreMod.COUNT_CHANCE_SURFACE_CONFIG_DECORATOR.configure(
+                                        new CountChanceConfig(chance, count, bottomOffset, top - topOffSet, target)))
         );
     }
-
-    public static void addVeinOre(Biome biome,
-                                  Block block,
-                                  float chance,
-                                  int bottomOffset,
-                                  int topOffSet,
-                                  int top) {
-        addVeinOre(
+    public static void addThickVeinOre(Biome biome,
+                                       Block block,
+                                       float chance,
+                                       int bottomOffset,
+                                       int topOffSet,
+                                       int top) {
+        addThickVeinOre(
                 biome,
                 block,
                 (int) Math.round(commonVeinSize.get(block) * AMP),
@@ -183,8 +205,8 @@ public class BiomOreFeatures {
                                         block.getDefaultState()
                                 )
                         ).createDecoratedFeature(
-                        BiomOreMod.CHANCE_HEIGHT_CONFIG_DECORATOR.configure(
-                                new CountChanceHeightConfig(chance, 2, count, top - topOffset, Target.NATURAL_STONE)
+                        BiomOreMod.COUNT_CHANCE_HEIGHT_CONFIG_DECORATOR.configure(
+                                new CountChanceConfig(chance, 2, count, top - topOffset, Target.NATURAL_STONE)
                         )
                 )
         );

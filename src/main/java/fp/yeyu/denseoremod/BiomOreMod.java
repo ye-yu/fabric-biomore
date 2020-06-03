@@ -5,7 +5,8 @@ import fp.yeyu.denseoremod.feature.builder.BiomOreSingleFeatureConfig;
 import fp.yeyu.denseoremod.feature.builder.BiomOreVeinFeature;
 import fp.yeyu.denseoremod.feature.builder.BiomOreVeinFeatureConfig;
 import fp.yeyu.denseoremod.feature.decorator.CountChanceHeight;
-import fp.yeyu.denseoremod.feature.decorator.CountChanceHeightConfig;
+import fp.yeyu.denseoremod.feature.decorator.CountChanceConfig;
+import fp.yeyu.denseoremod.feature.decorator.CountChanceSurface;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.gen.decorator.Decorator;
@@ -20,9 +21,11 @@ public class BiomOreMod implements ClientModInitializer {
     private static final Logger LOGGER = LogManager.getLogger(BiomOreMod.class);
     public static final int TYPE_EMPTY_AT;
     public static final LevelGeneratorType DENSE_ORE;
-    public static final Feature<BiomOreVeinFeatureConfig> BIOM_VEIN_ORE_FEATURE;
+    public static final Feature<BiomOreVeinFeatureConfig> BIOM_THICK_VEIN_ORE_FEATURE;
+    public static final Feature<BiomOreVeinFeatureConfig> BIOM_FLAT_VEIN_ORE_FEATURE;
     public static final Feature<BiomOreSingleFeatureConfig> BIOM_SINGLE_ORE_FEATURE;
-    public static final Decorator<CountChanceHeightConfig> CHANCE_HEIGHT_CONFIG_DECORATOR;
+    public static final Decorator<CountChanceConfig> COUNT_CHANCE_HEIGHT_CONFIG_DECORATOR;
+    public static final Decorator<CountChanceConfig> COUNT_CHANCE_SURFACE_CONFIG_DECORATOR;
 
     static {
         int i = 0;
@@ -34,9 +37,11 @@ public class BiomOreMod implements ClientModInitializer {
         LOGGER.info("Type is empty at: " + i + ". Using this as the world level generation type integer.");
         LevelGeneratorType.TYPES[i] = DENSE_ORE;
 
-        BIOM_VEIN_ORE_FEATURE = Registry.register(Registry.FEATURE, "biomore_vein_feature", new BiomOreVeinFeature(BiomOreVeinFeatureConfig::deserialize));
+        BIOM_THICK_VEIN_ORE_FEATURE = Registry.register(Registry.FEATURE, "biomore_thick_vein_feature", new BiomOreVeinFeature(BiomOreVeinFeatureConfig::deserialize));
+        BIOM_FLAT_VEIN_ORE_FEATURE = Registry.register(Registry.FEATURE, "biomore_flat_vein_feature", new BiomOreVeinFeature(BiomOreVeinFeatureConfig::deserialize, true));
         BIOM_SINGLE_ORE_FEATURE = Registry.register(Registry.FEATURE, "biomore_single_feature", new BiomOreSingleFeature(BiomOreSingleFeatureConfig::deserialize));
-        CHANCE_HEIGHT_CONFIG_DECORATOR = Registry.register(Registry.DECORATOR, "count_chance_height", new CountChanceHeight(CountChanceHeightConfig::deserialize));
+        COUNT_CHANCE_HEIGHT_CONFIG_DECORATOR = Registry.register(Registry.DECORATOR, "count_chance_height", new CountChanceHeight(CountChanceConfig::deserialize));
+        COUNT_CHANCE_SURFACE_CONFIG_DECORATOR = Registry.register(Registry.DECORATOR, "count_chance_surface", new CountChanceSurface(CountChanceConfig::deserialize));
     }
 
     @Override

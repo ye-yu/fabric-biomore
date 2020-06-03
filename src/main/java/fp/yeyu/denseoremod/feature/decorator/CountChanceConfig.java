@@ -6,7 +6,7 @@ import com.mojang.datafixers.types.DynamicOps;
 import fp.yeyu.denseoremod.feature.builder.targetfinder.Target;
 import net.minecraft.world.gen.decorator.DecoratorConfig;
 
-public class CountChanceHeightConfig implements DecoratorConfig {
+public class CountChanceConfig implements DecoratorConfig {
 
     public final float chance;
     public final int count;
@@ -14,7 +14,7 @@ public class CountChanceHeightConfig implements DecoratorConfig {
     public final int range;
     public final Target target;
 
-    public CountChanceHeightConfig(float chance, int count, int bottomOffset, int range, Target target) {
+    public CountChanceConfig(float chance, int count, int bottomOffset, int range, Target target) {
         this.chance = chance;
         this.count = count;
         this.bottomOffset = bottomOffset;
@@ -35,12 +35,12 @@ public class CountChanceHeightConfig implements DecoratorConfig {
                 )));
     }
 
-    public static CountChanceHeightConfig deserialize(Dynamic<?> dynamic) {
+    public static CountChanceConfig deserialize(Dynamic<?> dynamic) {
         final float chance = dynamic.get("chance").asFloat(0f);
         final int count = dynamic.get("count").asInt(0);
         final int bottom_offset = dynamic.get("bottom_offset").asInt(0);
         final int range = dynamic.get("range").asInt(0);
         final Target target = Target.byName(dynamic.get("target").asString(""));
-        return new CountChanceHeightConfig(chance, count, bottom_offset, range, target);
+        return new CountChanceConfig(chance, count, bottom_offset, range, target);
     }
 }
