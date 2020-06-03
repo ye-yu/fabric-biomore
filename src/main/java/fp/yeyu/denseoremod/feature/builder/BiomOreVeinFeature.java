@@ -42,7 +42,7 @@ public class BiomOreVeinFeature extends Feature<BiomOreVeinFeatureConfig> {
         else
             randomLength = random.nextInt(size);
         int spawnedBlock = 0;
-        final int noiseMax = 2;
+        final int noiseMax = 3;
         BlockPos placeBlock = new BlockPos(blockPos);
 
         int useNoise = random.nextInt(noiseMax);
