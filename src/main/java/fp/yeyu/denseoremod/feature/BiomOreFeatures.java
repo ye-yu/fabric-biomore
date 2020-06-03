@@ -1,5 +1,6 @@
 package fp.yeyu.denseoremod.feature;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import fp.yeyu.denseoremod.BiomOreMod;
 import fp.yeyu.denseoremod.feature.builder.BiomOreSingleFeatureConfig;
@@ -7,11 +8,16 @@ import fp.yeyu.denseoremod.feature.builder.BiomOreVeinFeatureConfig;
 import fp.yeyu.denseoremod.feature.builder.targetfinder.Target;
 import fp.yeyu.denseoremod.feature.decorator.CountChanceConfig;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.biome.DefaultBiomeFeatures;
 import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.gen.decorator.CountDecoratorConfig;
+import net.minecraft.world.gen.decorator.Decorator;
+import net.minecraft.world.gen.feature.DiskFeatureConfig;
+import net.minecraft.world.gen.feature.Feature;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -85,9 +91,8 @@ public class BiomOreFeatures {
         if (biome == Biomes.DESERT_HILLS) {
             addThickVeinOre(biome, Blocks.GOLD_BLOCK, 3, Target.NATURAL_STONE, 0.2f, 1, 5, 0, 64);
         }
-
         if (biome == Biomes.DESERT_LAKES) {
-            DefaultBiomeFeatures.addClay(biome);
+            biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, BiomOreMod.DRY_DISK_FEATURE.configure(new DiskFeatureConfig(Blocks.CLAY.getDefaultState(), 5, 2, Lists.newArrayList(Blocks.SAND.getDefaultState()))).createDecoratedFeature(BiomOreMod.COUNT_CHANCE_SURFACE_CONFIG_DECORATOR.configure(new CountChanceConfig(0.15f, 1, 40, 40, Target.OVERWORLD_SURFACE_BLOCK))));
         }
     }
 
