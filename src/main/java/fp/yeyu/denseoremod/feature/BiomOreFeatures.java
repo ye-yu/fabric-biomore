@@ -75,6 +75,20 @@ public class BiomOreFeatures {
 
     public static void desert(Object biomeObj) {
         Biome biome = (Biome) biomeObj;
+        DefaultBiomeFeatures.addMineables(biome);
+        DefaultBiomeFeatures.addDefaultDisks(biome);
+
+        addThickVeinOre(biome, Blocks.GOLD_ORE, 18, Target.NATURAL_STONE, 0.45f, 2, 5, 0, 64);
+        addThickVeinOre(biome, Blocks.REDSTONE_ORE, 12, Target.NATURAL_STONE, 0.45f, 2, 5, 0, 20);
+        addThickVeinOre(biome, Blocks.COAL_BLOCK, 3, Target.NATURAL_STONE, 0.2f, 3, 5, 0, 64);
+        addSingleOre(biome, Blocks.REDSTONE_BLOCK, 0.35f, 5, 5, 0, 64);
+        if (biome == Biomes.DESERT_HILLS) {
+            addThickVeinOre(biome, Blocks.GOLD_BLOCK, 3, Target.NATURAL_STONE, 0.2f, 1, 5, 0, 64);
+        }
+
+        if (biome == Biomes.DESERT_LAKES) {
+            DefaultBiomeFeatures.addClay(biome);
+        }
     }
 
     public static void extremeHills(Object biomeObj) {

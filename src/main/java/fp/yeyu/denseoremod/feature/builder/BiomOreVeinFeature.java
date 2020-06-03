@@ -36,11 +36,11 @@ public class BiomOreVeinFeature extends Feature<BiomOreVeinFeatureConfig> {
 
     private boolean generateFlatVein(IWorld iWorld, Random random, BlockPos blockPos, BiomOreVeinFeatureConfig oreFeatureConfig) {
         final int size = oreFeatureConfig.size;
-        int randomLength;
+        int randomLength = 1;
         if (size > 1)
-            randomLength = random.nextInt((int) (size * 0.75)) + (int) (size * 0.25);
+            randomLength += random.nextInt((int) (size * 0.75));
         else
-            randomLength = random.nextInt(size);
+            randomLength += random.nextInt(size);
         int spawnedBlock = 0;
         final int noiseMax = 3;
         BlockPos placeBlock = new BlockPos(blockPos);
