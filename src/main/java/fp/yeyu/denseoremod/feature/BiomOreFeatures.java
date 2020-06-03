@@ -98,6 +98,10 @@ public class BiomOreFeatures {
 
     public static void extremeHills(Object biomeObj) {
         Biome biome = (Biome) biomeObj;
+        DefaultBiomeFeatures.addMineables(biome);
+        DefaultBiomeFeatures.addDefaultDisks(biome);
+        addThickVeinOre(biome, Blocks.COAL_BLOCK, 60, Target.NATURAL_STONE, 0.25f, 1, 5, 0, 64);
+        addThickVeinOre(biome, Blocks.LAPIS_BLOCK, 12, Target.NATURAL_STONE, 0.4f, 2, 5, 0, 20);
     }
 
     public static void forest(Object biomeObj) {
