@@ -21,7 +21,7 @@ public class BiomOreFeatures {
     public static final HashMap<String, Consumer<Object>> methods = Maps.newHashMap();
     public static final HashMap<Block, Integer> commonVeinSize = Maps.newHashMap();
     public static final Logger LOGGER = LogManager.getLogger(BiomOreFeatures.class);
-    public static final double AMP = 3.5;
+    public static final double AMP = 3;
 
     static {
         methods.put("ocean", BiomOreFeatures::ocean);
@@ -57,8 +57,8 @@ public class BiomOreFeatures {
 
         // custom ores generation
         addThickVeinOre(biome, Blocks.DIAMOND_ORE, 0.25f, 5, 0, 64);
-        addSurfaceVeinOre(biome, Blocks.EMERALD_ORE, 12, Target.OVERWORLD_SURFACE_BLOCK, 0.33f, 1, 20, 0, 64);
-        addSingleOre(biome, Blocks.GOLD_BLOCK, 0.5f, 5, 5, 0, 64);
+        addSurfaceVeinOre(biome, Blocks.EMERALD_ORE, 10, Target.OVERWORLD_SURFACE_BLOCK, 0.2f, 1, 20, 0, 64);
+        addSingleOre(biome, Blocks.GOLD_BLOCK, 0.35f, 5, 5, 0, 64);
         LOGGER.info("Redefined features for ocean type biome.");
     }
 
