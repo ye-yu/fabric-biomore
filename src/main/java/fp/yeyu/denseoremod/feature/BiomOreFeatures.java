@@ -196,7 +196,7 @@ public class BiomOreFeatures {
                 Blocks.EMERALD_BLOCK
         );
         for (Block block: blocks) {
-            addThickVeinOre(biome, block, 3, Target.NATURAL_STONE, 0.33f, 1, 5, 0, 64);
+            addThickVeinOre(biome, block, 30, Target.NATURAL_STONE, 0.33f, 1, 5, 0, 64);
         }
     }
 
