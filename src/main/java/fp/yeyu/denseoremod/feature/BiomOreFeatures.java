@@ -1,5 +1,6 @@
 package fp.yeyu.denseoremod.feature;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import fp.yeyu.denseoremod.BiomOreMod;
@@ -8,19 +9,24 @@ import fp.yeyu.denseoremod.feature.builder.BiomOreVeinFeatureConfig;
 import fp.yeyu.denseoremod.feature.builder.targetfinder.Target;
 import fp.yeyu.denseoremod.feature.decorator.CountChanceConfig;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.biome.DefaultBiomeFeatures;
 import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.gen.decorator.ChanceDecoratorConfig;
 import net.minecraft.world.gen.decorator.CountDecoratorConfig;
 import net.minecraft.world.gen.decorator.Decorator;
 import net.minecraft.world.gen.feature.DiskFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.FeatureConfig;
+import net.minecraft.world.gen.feature.RandomPatchFeatureConfig;
+import net.minecraft.world.gen.placer.SimpleBlockPlacer;
+import net.minecraft.world.gen.stateprovider.SimpleBlockStateProvider;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class BiomOreFeatures {
@@ -77,6 +83,11 @@ public class BiomOreFeatures {
 
     public static void plains(Object biomeObj) {
         Biome biome = (Biome) biomeObj;
+        DefaultBiomeFeatures.addMineables(biome);
+        DefaultBiomeFeatures.addDefaultDisks(biome);
+        addThickVeinOre(biome, Blocks.ANDESITE, 50, Target.NATURAL_STONE, 0.25f, 2, 5, 0, 120);
+        addThickVeinOre(biome, Blocks.COAL_ORE, 60, Target.NATURAL_STONE, 0.25f, 1, 5, 0, 120);
+        addThickVeinOre(biome, Blocks.IRON_ORE, 35, Target.NATURAL_STONE, 0.4f, 2, 5, 0, 20);
     }
 
     public static void desert(Object biomeObj) {
@@ -102,25 +113,49 @@ public class BiomOreFeatures {
         DefaultBiomeFeatures.addDefaultDisks(biome);
         addThickVeinOre(biome, Blocks.COAL_BLOCK, 60, Target.NATURAL_STONE, 0.25f, 1, 5, 0, 120);
         addThickVeinOre(biome, Blocks.LAPIS_BLOCK, 12, Target.NATURAL_STONE, 0.4f, 2, 5, 0, 20);
+        addThickVeinOre(biome, Blocks.MOSSY_COBBLESTONE, 5, Target.NATURAL_STONE, 0.25f, 3, 5, 0, 120);
     }
 
     public static void forest(Object biomeObj) {
         Biome biome = (Biome) biomeObj;
         DefaultBiomeFeatures.addMineables(biome);
-        addSingleOre(biome, Blocks.DIAMOND_BLOCK, 0.15f, 5, 5, 0, 64);
+        DefaultBiomeFeatures.addDefaultDisks(biome);
+        addThickVeinOre(biome, Blocks.DIAMOND_BLOCK, 5, Target.NATURAL_STONE, 0.25f, 3, 5, 0, 120);
         addThickVeinOre(biome, Blocks.LAPIS_ORE, 30, Target.NATURAL_STONE, 0.25f, 2, 5, 0, 120);
+        if (biome == Biomes.DARK_FOREST || biome == Biomes.DARK_FOREST_HILLS) {
+            // do: change generation method
+            biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, BiomOreMod.DRY_DISK_FEATURE.configure(new DiskFeatureConfig(Blocks.MYCELIUM.getDefaultState(), 5, 1, Lists.newArrayList(Blocks.GRASS_BLOCK.getDefaultState()))).createDecoratedFeature(BiomOreMod.COUNT_CHANCE_SURFACE_CONFIG_DECORATOR.configure(new CountChanceConfig(0.15f, 1, 40, 40, Target.OVERWORLD_SURFACE_BLOCK))));
+            addThickVeinOre(biome, Blocks.GLOWSTONE, 3, Target.NATURAL_STONE, 0.25f, 1, 5, 0, 120);
+        }
     }
 
     public static void taiga(Object biomeObj) {
         Biome biome = (Biome) biomeObj;
+        DefaultBiomeFeatures.addMineables(biome);
+        DefaultBiomeFeatures.addDefaultDisks(biome);
+        addThickVeinOre(biome, Blocks.DIAMOND_BLOCK, 5, Target.NATURAL_STONE, 0.25f, 3, 5, 0, 120);
+        addThickVeinOre(biome, Blocks.LAPIS_ORE, 30, Target.NATURAL_STONE, 0.25f, 2, 5, 0, 120);
+        if (Arrays.asList(Biomes.SNOWY_TAIGA, Biomes.SNOWY_TAIGA_HILLS, Biomes.SNOWY_TAIGA_MOUNTAINS).contains(biome)) {
+            addThickVeinOre(biome, Blocks.SNOW_BLOCK, 7, Target.NATURAL_STONE, 0.5f, 3, 5, 0, 120);
+            addThickVeinOre(biome, Blocks.BLUE_ICE, 5, Target.NATURAL_STONE, 0.5f, 3, 5, 0, 120);
+        }
     }
 
     public static void swamp(Object biomeObj) {
         Biome biome = (Biome) biomeObj;
+        DefaultBiomeFeatures.addMineables(biome);
+        DefaultBiomeFeatures.addClay(biome);
+        addSurfaceVeinOre(biome, Blocks.SLIME_BLOCK, 3, Target.OVERWORLD_SURFACE_BLOCK, 0.65f, 1, 20, 0, 64);
+        addThickVeinOre(biome, Blocks.EMERALD_BLOCK, 15, Target.NATURAL_STONE, 0.25f, 1, 5, 0, 64);
+        addSurfaceVeinOre(biome, Blocks.EMERALD_ORE, 12, Target.OVERWORLD_SURFACE_BLOCK, 0.08f, 1, 20, 0, 64);
     }
 
     public static void river(Object biomeObj) {
         Biome biome = (Biome) biomeObj;
+        DefaultBiomeFeatures.addMineables(biome);
+        DefaultBiomeFeatures.addDefaultDisks(biome);
+        addThickVeinOre(biome, Blocks.COAL_BLOCK, 12, Target.NATURAL_STONE, 0.45f, 2, 5, 0, 64);
+        addThickVeinOre(biome, Blocks.IRON_ORE, 25, Target.NATURAL_STONE, 0.45f, 2, 5, 0, 20);
     }
 
     public static void nether(Object biomeObj) {
@@ -133,18 +168,55 @@ public class BiomOreFeatures {
 
     public static void icy(Object biomeObj) {
         Biome biome = (Biome) biomeObj;
+        DefaultBiomeFeatures.addMineables(biome);
+        DefaultBiomeFeatures.addDefaultDisks(biome);
+        addThickVeinOre(biome, Blocks.COAL_BLOCK, 60, Target.NATURAL_STONE, 0.25f, 1, 5, 0, 120);
+        addThickVeinOre(biome, Blocks.LAPIS_BLOCK, 30, Target.NATURAL_STONE, 0.4f, 2, 5, 0, 20);
+        addThickVeinOre(biome, Blocks.PACKED_ICE, 7, Target.NATURAL_STONE, 0.25f, 3, 5, 0, 120);
     }
 
     public static void mushroom(Object biomeObj) {
         Biome biome = (Biome) biomeObj;
+        DefaultBiomeFeatures.addMineables(biome);
+        DefaultBiomeFeatures.addDefaultDisks(biome);
+        List<Block> blocks = Arrays.asList(
+                Blocks.COAL_ORE,
+                Blocks.COAL_BLOCK,
+                Blocks.IRON_ORE,
+                Blocks.IRON_BLOCK,
+                Blocks.GOLD_ORE,
+                Blocks.GOLD_BLOCK,
+                Blocks.LAPIS_ORE,
+                Blocks.LAPIS_BLOCK,
+                Blocks.REDSTONE_ORE,
+                Blocks.REDSTONE_BLOCK,
+                Blocks.DIAMOND_ORE,
+                Blocks.DIAMOND_BLOCK,
+                Blocks.EMERALD_ORE,
+                Blocks.EMERALD_BLOCK
+        );
+        for (Block block: blocks) {
+            addThickVeinOre(biome, block, 3, Target.NATURAL_STONE, 0.33f, 1, 5, 0, 64);
+        }
     }
 
     public static void beach(Object biomeObj) {
         Biome biome = (Biome) biomeObj;
+        DefaultBiomeFeatures.addMineables(biome);
+        DefaultBiomeFeatures.addDefaultDisks(biome);
+        addThickVeinOre(biome, Blocks.IRON_ORE, 0.25f, 5, 0, 64);
+        addThickVeinOre(biome, Blocks.GOLD_ORE, 0.25f, 5, 0, 64);
     }
 
     public static void jungle(Object biomeObj) {
         Biome biome = (Biome) biomeObj;
+        DefaultBiomeFeatures.addMineables(biome);
+        DefaultBiomeFeatures.addDefaultDisks(biome);
+        addThickVeinOre(biome, Blocks.IRON_BLOCK, 45, Target.NATURAL_STONE, 0.25f, 1, 5, 0, 120);
+        addSurfaceVeinOre(biome, Blocks.DIAMOND_BLOCK, 3, Target.OVERWORLD_SURFACE_BLOCK, 0.08f, 1, 20, 0, 64);
+        addThickVeinOre(biome, Blocks.DIORITE, 60, Target.NATURAL_STONE, 0.25f, 1, 5, 0, 120);
+        RandomPatchFeatureConfig lanternConfig = (new RandomPatchFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.LANTERN.getDefaultState()), new SimpleBlockPlacer())).tries(1).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK)).cannotProject().build();
+        biome.addFeature(GenerationStep.Feature.VEGETAL_DECORATION, Feature.RANDOM_PATCH.configure(lanternConfig).createDecoratedFeature(Decorator.CHANCE_HEIGHTMAP_DOUBLE.configure(new ChanceDecoratorConfig(55))));
     }
 
     public static void none(Object biomeObj) {
@@ -153,10 +225,22 @@ public class BiomOreFeatures {
 
     public static void savanna(Object biomeObj) {
         Biome biome = (Biome) biomeObj;
+        DefaultBiomeFeatures.addMineables(biome);
+        DefaultBiomeFeatures.addDefaultDisks(biome);
+        addThickVeinOre(biome, Blocks.REDSTONE_ORE, 30, Target.NATURAL_STONE, 0.25f, 1, 5, 0, 120);
+        addThickVeinOre(biome, Blocks.GRANITE, 60, Target.NATURAL_STONE, 0.25f, 1, 5, 0, 120);
+        addThickVeinOre(biome, Blocks.LAPIS_BLOCK, 12, Target.NATURAL_STONE, 0.4f, 2, 5, 0, 20);
     }
 
     public static void mesa(Object biomeObj) {
         Biome biome = (Biome) biomeObj;
+        DefaultBiomeFeatures.addMineables(biome);
+        DefaultBiomeFeatures.addDefaultDisks(biome);
+        addThickVeinOre(biome, Blocks.BONE_BLOCK, 3, Target.NATURAL_STONE, 0.2f, 5, 5, 0, 64);
+        addThickVeinOre(biome, Blocks.IRON_ORE, 24, Target.NATURAL_STONE, 0.25f, 2, 5, 0, 64);
+        addThickVeinOre(biome, Blocks.REDSTONE_ORE, 24, Target.NATURAL_STONE, 0.25f, 2, 5, 0, 20);
+        addThickVeinOre(biome, Blocks.COAL_BLOCK, 3, Target.NATURAL_STONE, 0.2f, 10, 5, 0, 64);
+        biome.addFeature(GenerationStep.Feature.UNDERGROUND_DECORATION, Feature.GLOWSTONE_BLOB.configure(FeatureConfig.DEFAULT).createDecoratedFeature(Decorator.LIGHT_GEM_CHANCE.configure(new CountDecoratorConfig(8))));
     }
 
     public static void addThickVeinOre(Biome biome,
