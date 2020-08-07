@@ -1,4 +1,4 @@
 accessWidener v1 named
 
-accessible method net/minecraft/world/level/LevelGeneratorType <init> (ILjava/lang/String;I)V
-accessible method net/minecraft/world/level/LevelGeneratorType setVersioned ()Lnet/minecraft/world/level/LevelGeneratorType;
+accessible field net/minecraft/world/GameRules RULE_TYPES Ljava/util/Map;
+accessible method net/minecraft/world/GameRules$BooleanRule create (Z)Lnet/minecraft/world/GameRules$Type;

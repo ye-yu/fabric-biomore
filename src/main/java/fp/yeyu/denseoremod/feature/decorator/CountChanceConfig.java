@@ -1,46 +1,32 @@
 package fp.yeyu.denseoremod.feature.decorator;
 
-import com.google.common.collect.ImmutableMap;
-import com.mojang.datafixers.Dynamic;
-import com.mojang.datafixers.types.DynamicOps;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fp.yeyu.denseoremod.feature.builder.targetfinder.Target;
 import net.minecraft.world.gen.decorator.DecoratorConfig;
 
 public class CountChanceConfig implements DecoratorConfig {
+	public static final Codec<CountChanceConfig> CODEC =
+			RecordCodecBuilder.create(
+					(instance) -> instance.group(
+							Codec.FLOAT.fieldOf("chance").withDefault(0f).forGetter(countChanceConfig -> countChanceConfig.chance),
+							Codec.INT.fieldOf("count").withDefault(0).forGetter(countChanceConfig -> countChanceConfig.count),
+							Codec.INT.fieldOf("bottomOffset").withDefault(0).forGetter(countChanceConfig -> countChanceConfig.bottomOffset),
+							Codec.INT.fieldOf("range").withDefault(0).forGetter(countChanceConfig -> countChanceConfig.range),
+							Target.CODEC.fieldOf("target").forGetter(biomOreSingleFeatureConfig -> biomOreSingleFeatureConfig.target)
+					).apply(instance, CountChanceConfig::new));
 
-    public final float chance;
-    public final int count;
-    public final int bottomOffset;
-    public final int range;
-    public final Target target;
+	public final float chance;
+	public final int count;
+	public final int bottomOffset;
+	public final int range;
+	public final Target target;
 
-    public CountChanceConfig(float chance, int count, int bottomOffset, int range, Target target) {
-        this.chance = chance;
-        this.count = count;
-        this.bottomOffset = bottomOffset;
-        this.range = range;
-        this.target = target;
-    }
-
-    public static CountChanceConfig deserialize(Dynamic<?> dynamic) {
-        final float chance = dynamic.get("chance").asFloat(0f);
-        final int count = dynamic.get("count").asInt(0);
-        final int bottom_offset = dynamic.get("bottom_offset").asInt(0);
-        final int range = dynamic.get("range").asInt(0);
-        final Target target = Target.byName(dynamic.get("target").asString(""));
-        return new CountChanceConfig(chance, count, bottom_offset, range, target);
-    }
-
-    @Override
-    public <T> Dynamic<T> serialize(DynamicOps<T> ops) {
-        return new Dynamic<>(
-                ops,
-                ops.createMap(ImmutableMap.of(
-                        ops.createString("chance"), ops.createFloat(this.chance),
-                        ops.createString("count"), ops.createInt(this.count),
-                        ops.createString("bottom_offset"), ops.createInt(this.bottomOffset),
-                        ops.createString("range"), ops.createInt(this.range),
-                        ops.createString("target"), ops.createString(this.target.getName())
-                )));
-    }
+	public CountChanceConfig(float chance, int count, int bottomOffset, int range, Target target) {
+		this.chance = chance;
+		this.count = count;
+		this.bottomOffset = bottomOffset;
+		this.range = range;
+		this.target = target;
+	}
 }
