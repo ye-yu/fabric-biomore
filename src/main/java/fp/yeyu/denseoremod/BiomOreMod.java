@@ -11,6 +11,7 @@ import fp.yeyu.denseoremod.feature.decorator.CountChanceSurface;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.WorldAccess;
 import net.minecraft.world.gen.decorator.Decorator;
 import net.minecraft.world.gen.feature.DiskFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
