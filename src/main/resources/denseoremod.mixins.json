@@ -3,7 +3,8 @@
   "package": "fp.yeyu.denseoremod.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "BiomeMixin"
+    "BiomeMixin",
+    "DebugHubMixin"
   ],
   "client": [
   ],
