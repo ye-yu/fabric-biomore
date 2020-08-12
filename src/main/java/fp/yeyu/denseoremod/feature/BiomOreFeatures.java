@@ -33,19 +33,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.stream.IntStream;
 
 public class BiomOreFeatures {
-	
-	@Deprecated
-	public static final HashMap<String, Consumer<Object>> methods = Maps.newHashMap();
-	public static final HashMap<Block, Integer> commonVeinSize = Maps.newHashMap();
+
 	public static final double AMP = 3;
+	public static final HashMap<Block, Integer> commonVeinSize = Maps.newHashMap();
 	public static final HashMap<Biome, ArrayList<ConfiguredFeature<?, ?>>> MAPPED_CONFIG_FEATURES = Maps.newHashMap();
 	public static final HashMap<Biome, String> BIOME_CONTAINS = Maps.newHashMap();
 	public static final HashMap<Category, Biome> FALLBACK_BIOME = Maps.newHashMap();
 	public static final GenerationStep.Feature TARGET_FEATURE = GenerationStep.Feature.UNDERGROUND_ORES;
+	public static final Block[] MODIFIED_ORE = new Block[]{
+			// ores
+			Blocks.COAL_ORE, Blocks.IRON_ORE, Blocks.GOLD_ORE, Blocks.REDSTONE_ORE, Blocks.LAPIS_ORE, Blocks.DIAMOND_ORE, Blocks.EMERALD_ORE,
+
+			// mineables
+			Blocks.DIRT, Blocks.GRAVEL, Blocks.GRANITE, Blocks.DIORITE, Blocks.ANDESITE
+	};
+	public static final Block[] MODIFIED_DISKS = new Block[]{
+			Blocks.SAND, Blocks.CLAY, Blocks.GRAVEL
+	};
 
 	static {
 		commonVeinSize.put(Blocks.COAL_ORE, 17);
@@ -83,29 +89,30 @@ public class BiomOreFeatures {
 		MAPPED_CONFIG_FEATURES.put(Biomes.TAIGA, taiga(new ArrayList<>(), Biomes.TAIGA));
 		MAPPED_CONFIG_FEATURES.put(Biomes.SNOWY_TAIGA, snowyTaigas(new ArrayList<>(), Biomes.SNOWY_TAIGA));
 		MAPPED_CONFIG_FEATURES.put(Biomes.SNOWY_TAIGA_HILLS, snowyTaigas(new ArrayList<>(), Biomes.SNOWY_TAIGA_HILLS));
-		MAPPED_CONFIG_FEATURES.put(Biomes.SNOWY_TAIGA_MOUNTAINS, snowyTaigas(new ArrayList<>(), Biomes.SNOWY_TAIGA_MOUNTAINS));		FALLBACK_BIOME.put(Category.TAIGA, Biomes.TAIGA);
-		
+		MAPPED_CONFIG_FEATURES.put(Biomes.SNOWY_TAIGA_MOUNTAINS, snowyTaigas(new ArrayList<>(), Biomes.SNOWY_TAIGA_MOUNTAINS));
+		FALLBACK_BIOME.put(Category.TAIGA, Biomes.TAIGA);
+
 		MAPPED_CONFIG_FEATURES.put(Biomes.SWAMP, swamp(new ArrayList<>(), Biomes.SWAMP));
 		FALLBACK_BIOME.put(Category.SWAMP, Biomes.SWAMP);
-		
+
 		MAPPED_CONFIG_FEATURES.put(Biomes.RIVER, river(new ArrayList<>(), Biomes.RIVER));
 		FALLBACK_BIOME.put(Category.RIVER, Biomes.RIVER);
-		
+
 		MAPPED_CONFIG_FEATURES.put(Biomes.NETHER_WASTES, nether(new ArrayList<>(), Biomes.NETHER_WASTES));
 		FALLBACK_BIOME.put(Category.NETHER, Biomes.NETHER_WASTES);
-		
+
 		MAPPED_CONFIG_FEATURES.put(Biomes.THE_END, theend(new ArrayList<>(), Biomes.THE_END));
 		FALLBACK_BIOME.put(Category.THEEND, Biomes.THE_END);
-		
+
 		MAPPED_CONFIG_FEATURES.put(Biomes.SNOWY_TUNDRA, icy(new ArrayList<>(), Biomes.SNOWY_TUNDRA));
 		FALLBACK_BIOME.put(Category.ICY, Biomes.SNOWY_TUNDRA);
-		
+
 		MAPPED_CONFIG_FEATURES.put(Biomes.MUSHROOM_FIELDS, mushroom(new ArrayList<>(), Biomes.MUSHROOM_FIELDS));
 		FALLBACK_BIOME.put(Category.MUSHROOM, Biomes.MUSHROOM_FIELDS);
-		
+
 		MAPPED_CONFIG_FEATURES.put(Biomes.BEACH, beach(new ArrayList<>(), Biomes.BEACH));
 		FALLBACK_BIOME.put(Category.BEACH, Biomes.BEACH);
-		
+
 		MAPPED_CONFIG_FEATURES.put(Biomes.JUNGLE, jungle(new ArrayList<>(), Biomes.JUNGLE));
 		FALLBACK_BIOME.put(Category.JUNGLE, Biomes.JUNGLE);
 
@@ -114,8 +121,22 @@ public class BiomOreFeatures {
 
 		MAPPED_CONFIG_FEATURES.put(Biomes.BADLANDS, mesa(new ArrayList<>(), Biomes.BADLANDS));
 		FALLBACK_BIOME.put(Category.MESA, Biomes.BADLANDS);
-		
+
 		FALLBACK_BIOME.put(Category.NONE, Biomes.PLAINS); // Category.NONE should not exists, but just in case...
+	}
+
+	public static boolean isBiomOreFeatureBlock(Block block) {
+		for (Block b : MODIFIED_ORE) {
+			if (block == b) return true;
+		}
+		return false;
+	}
+
+	public static boolean isBiomOreDisksBlock(Block b) {
+		for (Block modifiedDisk : MODIFIED_DISKS) {
+			if (modifiedDisk == b) return true;
+		}
+		return false;
 	}
 
 	public static void addMineables(ArrayList<ConfiguredFeature<?, ?>> list) {
@@ -159,27 +180,30 @@ public class BiomOreFeatures {
 		return Arrays.stream(blocks).map(BiomOreFeatures::getBlockStrippedId).toArray(String[]::new);
 	}
 
-	public static ArrayList<ConfiguredFeature<?,?>> oceanBase(ArrayList<ConfiguredFeature<?, ?>> list, Biome ocean) {
+	public static ArrayList<ConfiguredFeature<?, ?>> oceanBase(ArrayList<ConfiguredFeature<?, ?>> list, Biome ocean) {
 		addMineables(list);
 		addDefaultDisks(list);
 		containsBasic(ocean);
+		addThickVeinOre(list, Blocks.DIAMOND_ORE, 0.25f, 5, 0, 64);
+		addSurfaceVeinOre(list, Blocks.EMERALD_ORE, 12, Target.OVERWORLD_SURFACE_BLOCK, 0.08f, 1, 20, 0, 64);
+		updateContains(ocean, getBlockStrippedId(Blocks.DIAMOND_ORE, Blocks.EMERALD_ORE));
 		return list;
 	}
-	
+
 	public static ArrayList<ConfiguredFeature<?, ?>> lukewarmOcean(ArrayList<ConfiguredFeature<?, ?>> list, Biome lukewarmOcean) {
 		oceanBase(list, lukewarmOcean);
 		addSingleOre(list, Blocks.GOLD_BLOCK, 0.35f, 5, 0, 64);
 		updateContains(lukewarmOcean, getBlockStrippedId(Blocks.GOLD_BLOCK));
 		return list;
 	}
-	
+
 	public static ArrayList<ConfiguredFeature<?, ?>> deepFrozenOcean(ArrayList<ConfiguredFeature<?, ?>> list, Biome deepFrozenOcean) {
 		oceanBase(list, deepFrozenOcean);
 		addSingleOre(list, Blocks.EMERALD_BLOCK, 0.35f, 5, 0, 64);
 		updateContains(deepFrozenOcean, getBlockStrippedId(Blocks.EMERALD_BLOCK));
 		return list;
 	}
-	
+
 	public static ArrayList<ConfiguredFeature<?, ?>> deepOceans(ArrayList<ConfiguredFeature<?, ?>> list, Biome biome) {
 		oceanBase(list, biome);
 		addSurfaceVeinOre(list, Blocks.PRISMARINE, 5, Target.OVERWORLD_SURFACE_BLOCK, 0.2f, 1, 20, 0, 64);
@@ -204,7 +228,7 @@ public class BiomOreFeatures {
 		addMineables(list);
 		addDefaultDisks(list);
 
-		addThickVeinOre(list, Blocks.GOLD_ORE, 18, Target.NATURAL_STONE, 0.45f, 2, 5, 0, 64);
+		addThickVeinOre(list, Blocks.GOLD_ORE, 18, Target.NATURAL_STONE, 0.55f, 2, 5, 0, 64);
 		addThickVeinOre(list, Blocks.REDSTONE_ORE, 12, Target.NATURAL_STONE, 0.45f, 2, 5, 0, 20);
 		addThickVeinOre(list, Blocks.COAL_BLOCK, 3, Target.NATURAL_STONE, 0.2f, 3, 5, 0, 64);
 		addSingleOre(list, Blocks.REDSTONE_BLOCK, 0.35f, 5, 0, 64);
@@ -215,7 +239,7 @@ public class BiomOreFeatures {
 
 	public static ArrayList<ConfiguredFeature<?, ?>> desertHills(ArrayList<ConfiguredFeature<?, ?>> list, Biome desertHills) {
 		desertBase(list, desertHills);
-		addThickVeinOre(list, Blocks.GOLD_BLOCK, 3, Target.NATURAL_STONE, 0.2f, 1, 5, 0, 64);
+		addThickVeinOre(list, Blocks.GOLD_BLOCK, 5, Target.NATURAL_STONE, 0.2f, 1, 5, 0, 64);
 		updateContains(desertHills, getBlockStrippedId(Blocks.GOLD_BLOCK));
 		return list;
 	}
@@ -247,7 +271,7 @@ public class BiomOreFeatures {
 		updateContains(forest, getBlockStrippedId(Blocks.DIAMOND_BLOCK, Blocks.LAPIS_ORE));
 		return list;
 	}
-	
+
 	public static ArrayList<ConfiguredFeature<?, ?>> darkForests(ArrayList<ConfiguredFeature<?, ?>> list, Biome darkForestHills) {
 		forest(list, darkForestHills);
 		// todo: change generation method
@@ -266,7 +290,7 @@ public class BiomOreFeatures {
 		updateContains(taiga, getBlockStrippedId(Blocks.DIAMOND_BLOCK, Blocks.LAPIS_ORE));
 		return list;
 	}
-	
+
 	public static ArrayList<ConfiguredFeature<?, ?>> snowyTaigas(ArrayList<ConfiguredFeature<?, ?>> list, Biome biome) {
 		taiga(list, biome);
 		addThickVeinOre(list, Blocks.SNOW_BLOCK, 7, Target.NATURAL_STONE, 0.5f, 3, 5, 0, 120);
@@ -356,7 +380,7 @@ public class BiomOreFeatures {
 		addMineables(list);
 		addDefaultDisks(list);
 		addThickVeinOre(list, Blocks.IRON_BLOCK, 45, Target.NATURAL_STONE, 0.25f, 1, 5, 0, 120);
-		addSurfaceVeinOre(list, Blocks.DIAMOND_BLOCK, 3, Target.OVERWORLD_SURFACE_BLOCK, 0.08f, 1, 20, 0, 64);
+		addSurfaceVeinOre(list, Blocks.DIAMOND_BLOCK, 12, Target.OVERWORLD_SURFACE_BLOCK, 0.08f, 1, 20, 0, 64);
 		addThickVeinOre(list, Blocks.DIORITE, 60, Target.NATURAL_STONE, 0.25f, 1, 5, 0, 120);
 		RandomPatchFeatureConfig lanternConfig = (new RandomPatchFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.LANTERN.getDefaultState()), new SimpleBlockPlacer())).tries(1).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK)).cannotProject().build();
 		list.add(Feature.RANDOM_PATCH.configure(lanternConfig).createDecoratedFeature(Decorator.CHANCE_HEIGHTMAP_DOUBLE.configure(new ChanceDecoratorConfig(55))));
@@ -375,7 +399,7 @@ public class BiomOreFeatures {
 		addDefaultDisks(list);
 		addThickVeinOre(list, Blocks.REDSTONE_ORE, 30, Target.NATURAL_STONE, 0.25f, 1, 5, 0, 120);
 		addThickVeinOre(list, Blocks.GRANITE, 60, Target.NATURAL_STONE, 0.25f, 1, 5, 0, 120);
-		addThickVeinOre(list, Blocks.LAPIS_BLOCK, 12, Target.NATURAL_STONE, 0.4f, 2, 5, 0, 20);
+		addThickVeinOre(list, Blocks.LAPIS_BLOCK, 16, Target.NATURAL_STONE, 0.5f, 2, 5, 0, 20);
 		containsBasic(savanna);
 		updateContains(savanna, getBlockStrippedId(Blocks.REDSTONE_ORE, Blocks.LAPIS_BLOCK));
 		return list;
