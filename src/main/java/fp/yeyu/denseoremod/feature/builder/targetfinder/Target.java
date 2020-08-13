@@ -17,7 +17,7 @@ public enum Target implements StringIdentifiable {
 	NETHERRACK("netherrack", new BlockPredicate(Blocks.NETHERRACK));
 
 	private static final Map<String, Target> nameMap = Arrays.stream(values()).collect(Collectors.toMap(Target::getName, (target) -> target));
-	public static final Codec<Target> CODEC = StringIdentifiable.method_28140(Target::values, Target::byName);
+	public static final Codec<Target> CODEC = StringIdentifiable.createCodec(Target::values, Target::byName);
 	private final String name;
 	private final Predicate<BlockState> predicate;
 

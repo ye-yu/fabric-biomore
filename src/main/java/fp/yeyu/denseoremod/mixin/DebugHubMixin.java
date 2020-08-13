@@ -7,7 +7,9 @@ import net.minecraft.client.gui.hud.DebugHud;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BuiltinBiomes;
 import org.apache.commons.lang3.StringUtils;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Mixin(DebugHud.class)
 public class DebugHubMixin {
@@ -36,9 +39,11 @@ public class DebugHubMixin {
 		if (!world.getLevelProperties().getGameRules().getBoolean(BiomOreMod.BIOMORE)) return;
 		final List<String> returnValue = cir.getReturnValue();
 		BlockPos blockPos = Objects.requireNonNull(this.client.getCameraEntity()).getBlockPos();
+
+		final Optional<RegistryKey<Biome>> biomeRegistryKey = this.client.world.method_31081(blockPos);
 		final Biome biome = this.client.world.getBiome(blockPos);
 		returnValue.add("Biome category: " + StringUtils.capitalize(biome.getCategory().toString()));
 		returnValue.add("Obtainable ores:");
-		returnValue.add(BiomOreFeatures.BIOME_CONTAINS.getOrDefault(biome, BiomOreFeatures.BIOME_CONTAINS.get(BiomOreFeatures.FALLBACK_BIOME.get(biome.getCategory()))));
+		returnValue.add(BiomOreFeatures.BIOME_CONTAINS.getOrDefault(biomeRegistryKey.orElse(BuiltinBiomes.PLAINS), BiomOreFeatures.BIOME_CONTAINS.get(BiomOreFeatures.FALLBACK_BIOME.get(biome.getCategory()))));
 	}
 }

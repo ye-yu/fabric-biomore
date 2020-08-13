@@ -15,9 +15,9 @@
     "denseoremod.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.8.2+build.194",
+    "fabricloader": ">=0.9.1+",
     "fabric": "*",
-    "minecraft": "1.16.1"
+    "minecraft": "1.16.2"
   },
   "accessWidener": "denseoremod.accesswidener"
 }

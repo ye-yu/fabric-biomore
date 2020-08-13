@@ -10,12 +10,16 @@ import fp.yeyu.denseoremod.feature.decorator.CountChanceHeight;
 import fp.yeyu.denseoremod.feature.decorator.CountChanceSurface;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.decorator.Decorator;
 import net.minecraft.world.gen.feature.DiskFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.HashMap;
 
 public class BiomOreMod implements ClientModInitializer {
 	public static final Feature<BiomOreVeinFeatureConfig> BIOM_THICK_VEIN_ORE_FEATURE;
@@ -25,6 +29,7 @@ public class BiomOreMod implements ClientModInitializer {
 	public static final Decorator<CountChanceConfig> COUNT_CHANCE_HEIGHT_CONFIG_DECORATOR;
 	public static final Decorator<CountChanceConfig> COUNT_CHANCE_SURFACE_CONFIG_DECORATOR;
 	public static final GameRules.Key<GameRules.BooleanRule> BIOMORE;
+	public static final HashMap<Biome, RegistryKey<Biome>> BIOME_REGISTRY_KEY_HASH_MAP = new HashMap<>();
 	private static final Logger LOGGER = LogManager.getLogger(BiomOreMod.class);
 
 	static {
@@ -45,6 +50,10 @@ public class BiomOreMod implements ClientModInitializer {
 		} else {
 			return key;
 		}
+	}
+
+	public static RegistryKey<Biome> getKey(Biome biome) {
+		return BIOME_REGISTRY_KEY_HASH_MAP.getOrDefault(biome, null);
 	}
 
 	@Override

@@ -12,7 +12,7 @@ public class BiomOreVeinFeatureConfig implements FeatureConfig {
 					(instance) -> instance.group(
 							Target.CODEC.fieldOf("target").forGetter(biomOreSingleFeatureConfig -> biomOreSingleFeatureConfig.target),
 							BlockState.CODEC.fieldOf("state").forGetter((emeraldOreFeatureConfig) -> emeraldOreFeatureConfig.state),
-							Codec.INT.fieldOf("size").withDefault(0).forGetter(biomOreSingleFeatureConfig -> biomOreSingleFeatureConfig.size)
+							Codec.INT.fieldOf("size").forGetter(biomOreSingleFeatureConfig -> biomOreSingleFeatureConfig.size)
 					).apply(instance, BiomOreVeinFeatureConfig::new));
 
 	public final Target target;

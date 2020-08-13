@@ -9,10 +9,10 @@ public class CountChanceConfig implements DecoratorConfig {
 	public static final Codec<CountChanceConfig> CODEC =
 			RecordCodecBuilder.create(
 					(instance) -> instance.group(
-							Codec.FLOAT.fieldOf("chance").withDefault(0f).forGetter(countChanceConfig -> countChanceConfig.chance),
-							Codec.INT.fieldOf("count").withDefault(0).forGetter(countChanceConfig -> countChanceConfig.count),
-							Codec.INT.fieldOf("bottomOffset").withDefault(0).forGetter(countChanceConfig -> countChanceConfig.bottomOffset),
-							Codec.INT.fieldOf("range").withDefault(0).forGetter(countChanceConfig -> countChanceConfig.range),
+							Codec.FLOAT.fieldOf("chance").forGetter(countChanceConfig -> countChanceConfig.chance),
+							Codec.INT.fieldOf("count").forGetter(countChanceConfig -> countChanceConfig.count),
+							Codec.INT.fieldOf("bottomOffset").forGetter(countChanceConfig -> countChanceConfig.bottomOffset),
+							Codec.INT.fieldOf("range").forGetter(countChanceConfig -> countChanceConfig.range),
 							Target.CODEC.fieldOf("target").forGetter(biomOreSingleFeatureConfig -> biomOreSingleFeatureConfig.target)
 					).apply(instance, CountChanceConfig::new));
 

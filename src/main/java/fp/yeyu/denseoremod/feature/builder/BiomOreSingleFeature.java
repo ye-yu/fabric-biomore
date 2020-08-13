@@ -2,8 +2,7 @@ package fp.yeyu.denseoremod.feature.builder;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.gen.StructureAccessor;
+import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.Feature;
 
@@ -17,7 +16,7 @@ public class BiomOreSingleFeature extends Feature<BiomOreSingleFeatureConfig> {
 	}
 
 	@Override
-	public boolean generate(ServerWorldAccess world, StructureAccessor structureAccessor, ChunkGenerator generator, Random random, BlockPos pos, BiomOreSingleFeatureConfig config) {
+	public boolean generate(StructureWorldAccess world, ChunkGenerator generator, Random random, BlockPos pos, BiomOreSingleFeatureConfig config) {
 		if (Objects.isNull(pos) || !config.target.getCondition().test(world.getBlockState(pos))) return false;
 		world.setBlockState(pos, config.state, 2);
 		return true;

@@ -5,7 +5,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.gen.StructureAccessor;
+import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.Feature;
 
@@ -168,7 +168,7 @@ public class BiomOreVeinFeature extends Feature<BiomOreVeinFeatureConfig> {
 	}
 
 	@Override
-	public boolean generate(ServerWorldAccess serverWorldAccess, StructureAccessor structureAccessor, ChunkGenerator generator, Random random, BlockPos blockPos, BiomOreVeinFeatureConfig config) {
+	public boolean generate(StructureWorldAccess serverWorldAccess, ChunkGenerator generator, Random random, BlockPos blockPos, BiomOreVeinFeatureConfig config) {
 		if (Objects.isNull(blockPos)) return false;
 		return flatVein ?
 				generateFlatVein(serverWorldAccess, random, blockPos, config) :
