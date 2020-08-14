@@ -7,9 +7,13 @@
   "icon": "assets/biomore/icon.png",
   "environment": "*",
   "entrypoints": {
-    "client": [
+    "main": [
+      "fp.yeyu.denseoremod.BiomOreMod"
+    ],
+    "server": [
       "fp.yeyu.denseoremod.BiomOreMod"
     ]
+
   },
   "mixins": [
     "denseoremod.mixins.json"

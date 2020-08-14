@@ -4,6 +4,8 @@ import fp.yeyu.denseoremod.BiomOreMod;
 import fp.yeyu.denseoremod.feature.BiomOreFeatures;
 import fp.yeyu.denseoremod.feature.builder.BiomOreSingleFeatureConfig;
 import fp.yeyu.denseoremod.feature.builder.BiomOreVeinFeatureConfig;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -51,10 +53,15 @@ public abstract class BiomeMixin {
 	@Inject(method = "generateFeatureStep", at = @At("HEAD"), cancellable = true)
 	public void generateFeatureStepMixinHead(GenerationStep.Feature step, StructureAccessor structureAccessor, ChunkGenerator chunkGenerator, ServerWorldAccess world, long populationSeed, ChunkRandom chunkRandom, BlockPos pos, CallbackInfo ci) {
 		Biome biome = (Biome) (Object) this;
-		if (!world.getLevelProperties().getGameRules().getBoolean(BiomOreMod.BIOMORE)) return;
+		if (!canGenerate(world)) return;
 		if (this.getCategory() == Biome.Category.THEEND || this.getCategory() == Biome.Category.NETHER || this.getCategory() == Biome.Category.NONE)
 			return;
 		truncateOres(biome);
+	}
+
+	private boolean canGenerate(ServerWorldAccess world) {
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) return true;
+		return BiomOreMod.BIOMORE != null && world.getLevelProperties().getGameRules().getBoolean(BiomOreMod.BIOMORE);
 	}
 
 	protected void truncateOres(Biome biome) {
@@ -66,7 +73,7 @@ public abstract class BiomeMixin {
 
 		experimentalGeneration = new ArrayList<>();
 		if (printDebug) {
-			LOGGER.info(String.format("For biome %s:", biome.getName().getString()));
+			LOGGER.info(String.format("For biome %s:", biome.getTranslationKey()));
 		}
 		for (ConfiguredFeature<?, ?> configuredFeature : lastOreFeature) {
 			FeatureConfig config = configuredFeature.config;
@@ -77,7 +84,7 @@ public abstract class BiomeMixin {
 
 				if (config instanceof EmeraldOreFeatureConfig) {
 					if (printDebug) {
-						LOGGER.info(String.format("Skipping vanilla generation for %s ore", Blocks.EMERALD_BLOCK));
+						LOGGER.info(String.format("Skipping vanilla generation for %s", Blocks.EMERALD_BLOCK));
 					}
 					continue;
 				}
@@ -99,7 +106,7 @@ public abstract class BiomeMixin {
 			if (BiomOreFeatures.isBiomOreFeatureBlock(((OreFeatureConfig) config).state.getBlock())) {
 				if (printDebug) {
 					final Block block = ((OreFeatureConfig) config).state.getBlock();
-					LOGGER.info(String.format("Skipping vanilla generation for %s ore", block));
+					LOGGER.info(String.format("Skipping vanilla generation for %s", block));
 				}
 				continue;
 			}
