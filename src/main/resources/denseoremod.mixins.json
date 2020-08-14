@@ -4,13 +4,12 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "BiomeMixin",
-    "BiomesMixin",
-    "DebugHubMixin",
     "EmeraldOreFeatureConfigMixin",
     "OreFeatureConfigMixin",
     "StructureAccessorWorld"
   ],
   "client": [
+    "DebugHubMixin"
   ],
   "injectors": {
     "defaultRequire": 1

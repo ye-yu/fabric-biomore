@@ -2,6 +2,8 @@ package fp.yeyu.denseoremod.mixin;
 
 import fp.yeyu.denseoremod.BiomOreMod;
 import fp.yeyu.denseoremod.feature.GenerationUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.WorldAccess;
@@ -28,15 +30,18 @@ public abstract class BiomeMixin {
 	@Final
 	private Map<Integer, List<StructureFeature<?>>> field_26634;
 
+	private static boolean canGenerate(WorldAccess world) {
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) return true;
+		return BiomOreMod.BIOMORE != null && world.getLevelProperties().getGameRules().getBoolean(BiomOreMod.BIOMORE);
+	}
+
 	@Shadow
 	public abstract Biome.Category getCategory();
 
 	@Inject(method = "generateFeatureStep", at = @At("HEAD"), cancellable = true)
 	public void generateFeatureStepMixinHead(StructureAccessor structureAccessor, ChunkGenerator chunkGenerator, ChunkRegion region, long populationSeed, ChunkRandom random, BlockPos pos, CallbackInfo ci) {
 		Biome biome = (Biome) (Object) this;
-		final WorldAccess world = ((StructureAccessorWorld) structureAccessor).getWorld();
-		if (!world.getLevelProperties().getGameRules().getBoolean(BiomOreMod.BIOMORE)) return;
-
+		if (!canGenerate(((StructureAccessorWorld) structureAccessor).getWorld())) return;
 		if (this.getCategory() == Biome.Category.THEEND || this.getCategory() == Biome.Category.NETHER || this.getCategory() == Biome.Category.NONE)
 			return;
 		GenerationUtil.generateFeatureStep(biome, field_26634, structureAccessor, random, region, chunkGenerator, populationSeed, pos, printDebug);
