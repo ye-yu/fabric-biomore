@@ -25,28 +25,28 @@ import java.util.Map;
 @Mixin(Biome.class)
 public abstract class BiomeMixin {
 
-	private boolean printDebug = true;
-	@Shadow
-	@Final
-	private Map<Integer, List<StructureFeature<?>>> field_26634;
+    private boolean printDebug = true;
+    @Shadow
+    @Final
+    private Map<Integer, List<StructureFeature<?>>> structures;
 
-	private static boolean canGenerate(WorldAccess world) {
-		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) return true;
-		return BiomOreMod.BIOMORE != null && world.getLevelProperties().getGameRules().getBoolean(BiomOreMod.BIOMORE);
-	}
+    private static boolean canGenerate(WorldAccess world) {
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) return true;
+        return BiomOreMod.BIOMORE != null && world.getLevelProperties().getGameRules().getBoolean(BiomOreMod.BIOMORE);
+    }
 
-	@Shadow
-	public abstract Biome.Category getCategory();
+    @Shadow
+    public abstract Biome.Category getCategory();
 
-	@Inject(method = "generateFeatureStep", at = @At("HEAD"), cancellable = true)
-	public void generateFeatureStepMixinHead(StructureAccessor structureAccessor, ChunkGenerator chunkGenerator, ChunkRegion region, long populationSeed, ChunkRandom random, BlockPos pos, CallbackInfo ci) {
-		Biome biome = (Biome) (Object) this;
-		if (!canGenerate(((StructureAccessorWorld) structureAccessor).getWorld())) return;
-		if (this.getCategory() == Biome.Category.THEEND || this.getCategory() == Biome.Category.NETHER || this.getCategory() == Biome.Category.NONE)
-			return;
-		GenerationUtil.generateFeatureStep(biome, field_26634, structureAccessor, random, region, chunkGenerator, populationSeed, pos, printDebug);
-		printDebug = false;
-		ci.cancel();
-	}
+    @Inject(method = "generateFeatureStep", at = @At("HEAD"), cancellable = true)
+    public void generateFeatureStepMixinHead(StructureAccessor structureAccessor, ChunkGenerator chunkGenerator, ChunkRegion region, long populationSeed, ChunkRandom random, BlockPos pos, CallbackInfo ci) {
+        Biome biome = (Biome) (Object) this;
+        if (!canGenerate(((StructureAccessorWorld) structureAccessor).getWorld())) return;
+        if (this.getCategory() == Biome.Category.THEEND || this.getCategory() == Biome.Category.NETHER || this.getCategory() == Biome.Category.NONE)
+            return;
+        GenerationUtil.generateFeatureStep(biome, structures, structureAccessor, random, region, chunkGenerator, populationSeed, pos, printDebug);
+        printDebug = false;
+        ci.cancel();
+    }
 
 }

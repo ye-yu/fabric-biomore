@@ -9,6 +9,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.biome.BuiltinBiomes;
 import org.apache.commons.lang3.StringUtils;
 import org.spongepowered.asm.mixin.Final;
@@ -25,25 +26,25 @@ import java.util.Optional;
 @Mixin(DebugHud.class)
 public class DebugHubMixin {
 
-	@Shadow
-	@Final
-	private MinecraftClient client;
+    @Shadow
+    @Final
+    private MinecraftClient client;
 
-	@Inject(method = "getLeftText", at = @At("RETURN"))
-	public void leftTextMixin(CallbackInfoReturnable<List<String>> cir) {
-		assert this.client.world != null;
-		IntegratedServer integratedServer = this.client.getServer();
-		assert integratedServer != null;
-		if (!integratedServer.getWorlds().iterator().hasNext()) return;
-		final ServerWorld world = integratedServer.getWorlds().iterator().next();
-		if (!world.getLevelProperties().getGameRules().getBoolean(BiomOreMod.BIOMORE)) return;
-		final List<String> returnValue = cir.getReturnValue();
-		BlockPos blockPos = Objects.requireNonNull(this.client.getCameraEntity()).getBlockPos();
+    @Inject(method = "getLeftText", at = @At("RETURN"))
+    public void leftTextMixin(CallbackInfoReturnable<List<String>> cir) {
+        assert this.client.world != null;
+        IntegratedServer integratedServer = this.client.getServer();
+        assert integratedServer != null;
+        if (!integratedServer.getWorlds().iterator().hasNext()) return;
+        final ServerWorld world = integratedServer.getWorlds().iterator().next();
+        if (!world.getLevelProperties().getGameRules().getBoolean(BiomOreMod.BIOMORE)) return;
+        final List<String> returnValue = cir.getReturnValue();
+        BlockPos blockPos = Objects.requireNonNull(this.client.getCameraEntity()).getBlockPos();
 
-		final Optional<RegistryKey<Biome>> biomeRegistryKey = this.client.world.method_31081(blockPos);
-		final Biome biome = this.client.world.getBiome(blockPos);
-		returnValue.add("Biome category: " + StringUtils.capitalize(biome.getCategory().toString()));
-		returnValue.add("Obtainable ores:");
-		returnValue.add(BiomOreFeatures.BIOME_CONTAINS.getOrDefault(biomeRegistryKey.orElse(BuiltinBiomes.PLAINS), BiomOreFeatures.BIOME_CONTAINS.get(BiomOreFeatures.FALLBACK_BIOME.get(biome.getCategory()))));
-	}
+        final Optional<RegistryKey<Biome>> biomeRegistryKey = this.client.world.method_31081(blockPos);
+        final Biome biome = this.client.world.getBiome(blockPos);
+        returnValue.add("Biome category: " + StringUtils.capitalize(biome.getCategory().toString()));
+        returnValue.add("Obtainable ores:");
+        returnValue.add(BiomOreFeatures.BIOME_CONTAINS.getOrDefault(biomeRegistryKey.orElse(BiomeKeys.PLAINS), BiomOreFeatures.BIOME_CONTAINS.get(BiomOreFeatures.FALLBACK_BIOME.get(biome.getCategory()))));
+    }
 }

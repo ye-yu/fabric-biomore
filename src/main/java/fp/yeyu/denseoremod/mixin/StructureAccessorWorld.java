@@ -8,6 +8,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(StructureAccessor.class)
 public interface StructureAccessorWorld {
 
-	@Accessor
-	WorldAccess getWorld();
+    @Accessor
+    WorldAccess getWorld();
 }

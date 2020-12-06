@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class BlockUtils {
-	public static boolean isAmongBlock(Block block, Block... blocks) {
-		return Objects.nonNull(block) && Arrays.asList(blocks).contains(block);
-	}
+    public static boolean isAmongBlock(Block block, Block... blocks) {
+        return Objects.nonNull(block) && Arrays.asList(blocks).contains(block);
+    }
 }

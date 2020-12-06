@@ -11,12 +11,12 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(EmeraldOreFeatureConfig.class)
 public class EmeraldOreFeatureConfigMixin implements BlockConfigurationProvider {
 
-	@Shadow
-	@Final
-	public BlockState state;
+    @Shadow
+    @Final
+    public BlockState state;
 
-	@Override
-	public Block getGenerationBlock() {
-		return state.getBlock();
-	}
+    @Override
+    public Block getGenerationBlock() {
+        return state.getBlock();
+    }
 }

@@ -12,38 +12,38 @@ import java.util.Objects;
 import java.util.Random;
 
 public class DryDiskFeature extends DiskFeature {
-	public DryDiskFeature(Codec<DiskFeatureConfig> codec) {
-		super(codec);
-	}
+    public DryDiskFeature(Codec<DiskFeatureConfig> codec) {
+        super(codec);
+    }
 
-	@Override
-	public boolean generate(StructureWorldAccess structureWorldAccess, ChunkGenerator chunkGenerator, Random random, BlockPos blockPos, DiskFeatureConfig diskFeatureConfig) {
-		if (Objects.isNull(blockPos)) return false;
-		int i = 0;
-		int j = diskFeatureConfig.radius.getValue(random);
+    @Override
+    public boolean generate(StructureWorldAccess structureWorldAccess, ChunkGenerator chunkGenerator, Random random, BlockPos blockPos, DiskFeatureConfig diskFeatureConfig) {
+        if (Objects.isNull(blockPos)) return false;
+        int i = 0;
+        int j = diskFeatureConfig.radius.getValue(random);
 
-		for (int k = blockPos.getX() - j; k <= blockPos.getX() + j; ++k) {
-			for (int l = blockPos.getZ() - j; l <= blockPos.getZ() + j; ++l) {
-				int m = k - blockPos.getX();
-				int n = l - blockPos.getZ();
-				if (m * m + n * n <= j * j) {
-					for (int o = blockPos.getY() - diskFeatureConfig.ySize; o <= blockPos.getY() + diskFeatureConfig.ySize; ++o) {
-						BlockPos blockPos2 = new BlockPos(k, o, l);
-						BlockState blockState = structureWorldAccess.getBlockState(blockPos2);
+        for (int k = blockPos.getX() - j; k <= blockPos.getX() + j; ++k) {
+            for (int l = blockPos.getZ() - j; l <= blockPos.getZ() + j; ++l) {
+                int m = k - blockPos.getX();
+                int n = l - blockPos.getZ();
+                if (m * m + n * n <= j * j) {
+                    for (int o = blockPos.getY() - diskFeatureConfig.halfHeight; o <= blockPos.getY() + diskFeatureConfig.halfHeight; ++o) {
+                        BlockPos blockPos2 = new BlockPos(k, o, l);
+                        BlockState blockState = structureWorldAccess.getBlockState(blockPos2);
 
-						for (BlockState blockState2 : diskFeatureConfig.targets) {
-							if (blockState2.getBlock() == blockState.getBlock()) {
-								structureWorldAccess.setBlockState(blockPos2, diskFeatureConfig.state, 2);
-								++i;
-								break;
-							}
-						}
-					}
-				}
-			}
-		}
+                        for (BlockState blockState2 : diskFeatureConfig.targets) {
+                            if (blockState2.getBlock() == blockState.getBlock()) {
+                                structureWorldAccess.setBlockState(blockPos2, diskFeatureConfig.state, 2);
+                                ++i;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-		return i > 0;
-	}
+        return i > 0;
+    }
 
 }

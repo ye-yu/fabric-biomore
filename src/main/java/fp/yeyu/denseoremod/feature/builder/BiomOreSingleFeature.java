@@ -11,14 +11,14 @@ import java.util.Random;
 
 public class BiomOreSingleFeature extends Feature<BiomOreSingleFeatureConfig> {
 
-	public BiomOreSingleFeature(Codec<BiomOreSingleFeatureConfig> configCodec) {
-		super(configCodec);
-	}
+    public BiomOreSingleFeature(Codec<BiomOreSingleFeatureConfig> configCodec) {
+        super(configCodec);
+    }
 
-	@Override
-	public boolean generate(StructureWorldAccess world, ChunkGenerator generator, Random random, BlockPos pos, BiomOreSingleFeatureConfig config) {
-		if (Objects.isNull(pos) || !config.target.getCondition().test(world.getBlockState(pos))) return false;
-		world.setBlockState(pos, config.state, 2);
-		return true;
-	}
+    @Override
+    public boolean generate(StructureWorldAccess world, ChunkGenerator generator, Random random, BlockPos pos, BiomOreSingleFeatureConfig config) {
+        if (Objects.isNull(pos) || !config.target.getCondition().test(world.getBlockState(pos))) return false;
+        world.setBlockState(pos, config.state, 2);
+        return true;
+    }
 }
