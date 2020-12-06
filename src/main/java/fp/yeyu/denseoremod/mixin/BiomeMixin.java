@@ -28,7 +28,7 @@ public abstract class BiomeMixin {
     private boolean printDebug = true;
     @Shadow
     @Final
-    private Map<Integer, List<StructureFeature<?>>> structures;
+    private Map<Integer, List<StructureFeature<?>>> field_26634;
 
     private static boolean canGenerate(WorldAccess world) {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) return true;
@@ -44,7 +44,7 @@ public abstract class BiomeMixin {
         if (!canGenerate(((StructureAccessorWorld) structureAccessor).getWorld())) return;
         if (this.getCategory() == Biome.Category.THEEND || this.getCategory() == Biome.Category.NETHER || this.getCategory() == Biome.Category.NONE)
             return;
-        GenerationUtil.generateFeatureStep(biome, structures, structureAccessor, random, region, chunkGenerator, populationSeed, pos, printDebug);
+        GenerationUtil.generateFeatureStep(biome, field_26634, structureAccessor, random, region, chunkGenerator, populationSeed, pos, printDebug);
         printDebug = false;
         ci.cancel();
     }
